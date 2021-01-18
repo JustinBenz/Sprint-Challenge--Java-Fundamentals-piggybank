@@ -16,11 +16,16 @@ public class PiggyBankController {
     @Autowired
     private PiggyBankRepository piggyBankRepository;
 
-//    http://localhost:2019/total
+    //    http://localhost:2019/total
     @GetMapping(value = "/total", produces = "application/json")
-    public ResponseEntity<?> getTotal(){
+    public ResponseEntity<?> getTotal() {
         List<PiggyBank> pigList = new ArrayList<>();
         piggyBankRepository.findAll().iterator().forEachRemaining(pigList::add);
-
-        return new ResponseEntity<>(pigList, HttpStatus.OK);
+        double total = 0.0;
+        for (PiggyBank m : pigList) {
+            total += m.getQuantity() * m.getValue();
+        }
+        System.out.println("Total Moolah:" + total);
+        return new ResponseEntity<>(total, HttpStatus.OK);
+    }
 }
